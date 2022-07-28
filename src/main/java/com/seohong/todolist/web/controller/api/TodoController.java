@@ -28,11 +28,11 @@ public class TodoController {
 	
 	private final TodoService todoService;
 	
-	@GetMapping("/list")
-	public ResponseEntity<?> getTodoList(@RequestParam int page, @RequestParam int contentCount){
+	@GetMapping("/list/{type}")
+	public ResponseEntity<?> getTodoList(@PathVariable String type, @RequestParam int page, @RequestParam int contentCount){
 		List<TodoListRespDto> list = null;
 		try {
-			list = todoService.getTodoList(page, contentCount);
+			list = todoService.getTodoList(type, page, contentCount);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, page + "page list on load failed", list));
@@ -40,17 +40,6 @@ public class TodoController {
 		return ResponseEntity.ok().body(new CMRespDto<>(1, page + "page list success to load", list));
 	}
 	
-	@GetMapping("/list/importance")
-	public ResponseEntity<?> getImportanceTodoList(@RequestParam int page, @RequestParam int contentCount){
-		List<TodoListRespDto> list = null;
-		try {
-			list = todoService.getImportanceTodoList(page, contentCount);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, page + "page imporatnce list on load failed", list));
-		}
-		return ResponseEntity.ok().body(new CMRespDto<>(1, page + "page imporatnce list success to load", list));
-	}
 	
 	@PostMapping("/todo")
 	public ResponseEntity<?> addTodo(@RequestBody CreateTodoReqDto createTodoReqDto){

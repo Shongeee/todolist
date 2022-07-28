@@ -17,7 +17,7 @@
 		)
 	</insert>
 	
-	<select id="getTodoListOfIndex" parameterType="hashmap" resultType="com.seohong.todolist.domain.todo.Todo">
+	<select id="getTodoList" parameterType="hashmap" resultType="com.seohong.todolist.domain.todo.Todo">
 		select
 			tm.todo_code,
 			tm.todo_content,
@@ -25,29 +25,7 @@
 			tm.importance_flag,
 			
 			tt.total_count,
-			
-			tm.create_date,
-			tm.update_date
-			
-		from
-			todo_mst tm
-			LEFT OUTER JOIN (SELECT
-								COUNT(*) AS total_count
-							FROM
-								todo_mst) tt ON(1 = 1)
-		order by
-			todo_code desc
-		limit #{index}, #{count}
-	</select>
-	
-	<select id="getImportanceTodoListOfIndex" parameterType="hashmap" resultType="com.seohong.todolist.domain.todo.Todo">
-		select
-			tm.todo_code,
-			tm.todo_content,
-			tm.todo_complete,
-			tm.importance_flag,
-			
-			tt.total_count,
+			tc.incomplete_count,
 			
 			tm.create_date,
 			tm.update_date
@@ -58,13 +36,50 @@
 								COUNT(*) AS total_count
 							FROM
 								todo_mst
-							where
-								importance_flag = 1) tt ON(1 = 1)
+							WHERE
+							<choose>
+								<when test='type.equals("importance")'>
+									importance_flag = 1
+								</when>
+								<when test='type.equals("complete")'>
+									todo_complete = 1
+								</when>
+								<when test='type.equals("incomplete")'>
+									todo_complete = 0
+								</when>
+								<otherwise>
+									1 = 1
+								</otherwise>
+							</choose>	
+								) tt ON(1 = 1)
+			LEFT OUTER JOIN(SELECT
+								COUNT(todo_complete) as incomplete_count
+							FROM
+								todo_mst
+							WHERE
+								todo_complete = 0
+								<if test='type.equals("importance")'>
+									and importance_flag = 1
+								</if>
+								) tc ON(1 = 1)
 		where
-			importance_flag = 1
+			<choose>
+				<when test='type.equals("importance")'>
+					importance_flag = 1
+				</when>
+				<when test='type.equals("complete")'>
+					todo_complete = 1
+				</when>
+				<when test='type.equals("incomplete")'>
+					todo_complete = 0
+				</when>
+				<otherwise>
+					1 = 1
+				</otherwise>
+			</choose>	
 		order by
 			todo_code desc
-		LIMIT #{index}, #{count}
+		limit #{index}, #{count}
 	</select>
 	
 	<update id="updateTodoComplete" parameterType="Integer">
