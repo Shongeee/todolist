@@ -5,3 +5,5 @@
 *{margin: 0; padding: 0; box-sizing: border-box;}
 li{list-style: none;}
 body{font-family: 'Noto Sans KR', sans-serif; font-size: 14px; background-color: #fafafa; color: #3c3c3c;}
+
+.visible{display: none;}
