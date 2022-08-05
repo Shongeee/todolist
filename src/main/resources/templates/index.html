@@ -53,6 +53,25 @@
             <div class="add-todo-button"><i class="fa-solid fa-plus"></i></div>
         </main>
     </div>
+    <div class="modal-container modal-visible">
+        <div class="modal-add-todo">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-pen-to-square"></i>Todo 추가</h2>
+                <button class="modal-close-button">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-items">
+                <input type="text" class="modal-todo-input" placeholder="오늘의 Todo를 입력하세요.">
+                <input type="checkbox" id="importance-check-index" class="importance-check">
+                <label for="importance-check-index">
+                    <i class="fa-solid fa-star importance-on"></i>
+                    <i class="fa-regular fa-star importance-off"></i>
+                </label>
+            </div>
+            <button class="modal-commit-button">확인</button>
+        </div>
+    </div>
     <script src="/static/js/script.js"></script>
 </body>
 </html>
